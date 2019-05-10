@@ -1,23 +1,32 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Button, Form, Label, Input } from 'reactstrap';
 import axios from 'axios';
+import Store from '../../store/context';
+import history from '../../helper/history';
 
 export default function LoginForm() {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const { state, dispatch } = useContext(Store);
+
+  useEffect(() => {
+    if (state.isAuth) history.push('/');
+  }, [state.isAuth]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const { REACT_APP_API_URL } = process.env;
-      await axios.post(`${REACT_APP_API_URL}/v1/login`, {
+      const { data } = await axios.post('/login', {
         email,
         password,
       });
+      dispatch({ type: 'LOGIN', payload: data });
+      history.push('/');
     } catch (error) {
-      if (error.response.status === 401) {
-        console.log(error.response)
+      if (error.response.status !== 200) {
+        setError(error.response.data.message);
       }
     }
   }
@@ -55,6 +64,9 @@ export default function LoginForm() {
                   required
                   data-eye
                 />
+              </div>
+              <div className="form-group">
+                <p className="text-danger text-error">{error}</p>
               </div>
               <div className="form-group no-margin">
                 <Button className="btn-info btn-block">Login</Button>
