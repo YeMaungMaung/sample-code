@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ../mongodb/db:/data/db
+    ports:
+      - 27017:27017
+
+  frontend:
+    container_name: frontend
+    image: frontend
+    restart: always
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-prod
+    ports:
+      - 80:80
+
+  backend:
+    container_name: backend
+    image: backend
+    restart: always
+    build: ./backend
+    environment:
+      PORT: 4000
+      NODE_ENV: production
+      MONGO_DB_URL: 'mongodb://mongo:27017/auth'
+      JWT_SECRET: secret
+    depends_on:
+      - mongo
+    ports:
+      - 4000:4000
+
+  

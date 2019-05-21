@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ../mongodb/db:/data/db
+    ports:
+      - 27017:27017
+    
+  frontend:
+    container_name: frontend
+    image: frontend
+    build: ./frontend
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - 3000:3000
+
+  backend:
+    container_name: backend
+    image: backend
+    build: ./backend
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - mongo
+    ports:
+      - 4000:4000
+    command: npm run dev
+
+  
