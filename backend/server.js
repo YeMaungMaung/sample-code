@@ -21,5 +21,5 @@ const app = require('./app');
 const httpServer = http.createServer(app);
 
 httpServer.listen(PORT, () => {
-  console.log(`Maintenance App running → PORT ${PORT} in ${NODE_ENV}!`);
+  console.log(`Node App running → PORT ${PORT} in ${NODE_ENV}!`);
 });
