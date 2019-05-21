@@ -22,9 +22,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get('/', (req, res) => res.json({ message: 'Hi, How are you?' }));
-router.get('/register', catchErrors(usersController.register));
+router.post('/register', catchErrors(usersController.register));
 router.post('/login', catchErrors(authController.login));
-router.get('/logout', requireAuth, catchErrors(authController.logout));
 router.get('/users/:id', requireAuth, catchErrors(usersController.getUser));
 router.patch(
   '/users/:id',
